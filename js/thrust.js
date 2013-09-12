@@ -139,17 +139,64 @@ var Thrust  = Badger.Base.breed({
         height:     600,
         trace:      0,
         console:    '#console',
-        ship_path: "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0",
-        ship_mass:  5,
-        turn_on:    20,
-        turn_off:   20,
-        turn_max:   180,
-        thrust_on:  0.1,
-        thrust_off: 0.05,
-        ship_style: {
-            fill:           "#ccc",
-            stroke:         '#444',
-            'stroke-width': 3
+        shipsel:    'select[name=ship]',
+        ship:       'thunderchild',
+        ships: {
+            thunderchild: {
+                name:               "Thunderchild",
+                path:               "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0",
+                centre:             "0,-12",
+                mass:               5,
+                scale:              3,
+                power:              1000,
+                max_turn:           180,
+                turn_rate:          0.1,
+                oversteer:          0.1,
+                thrust_rate:        0.1,
+                overthrust:         0.1,
+                style: {
+                    fill:           "#ccc",
+                    stroke:         '#444',
+                    'stroke-width': 3
+                }
+            },
+            lightning: {
+                name:               "Lightning",
+                path:               "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0",
+                centre:             "0,-5",
+                scale:              "2",
+                mass:               2,
+                power:              2500,
+                max_turn:           300,
+                turn_rate:          0.8,
+                oversteer:          0.05,
+                thrust_rate:        0.5,
+                overthrust:         0.05,
+                style: {
+                    fill:           "#8cc",
+                    stroke:         '#138',
+                    'stroke-width': 1
+                }
+            },
+            tanker: {
+                name:               "Tanker",
+                path:               "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0",
+                centre:             "0,-18",
+                scale:              4,
+                mass:               20,
+                power:              4000,
+                max_turn:           180,
+                turn_rate:          0.005,
+                oversteer:          0.99,
+                thrust_rate:        0.01,
+                overthrust:         0.1,
+                style: {
+                    fill:           "#aca",
+                    stroke:         '#464',
+                    'stroke-width': 5
+                }
+            }
+
         },
         orb_style: {
             fill:           "#ccf",
@@ -170,26 +217,19 @@ var Thrust  = Badger.Base.breed({
             paper   = self.paper  = config.paper,
             width   = self.width  = config.width,
             height  = self.height = config.height,
-            midx    = width / 2,
-            midy    = height / 2;
+            midx    = self.midx   = width / 2,
+            midy    = self.midy   = height / 2;
 
         self.debug("config: ", config);
         self.init_elements(config);
         self.init_key_handler(config);
-
-        self.ship   = Steerable({
-            x:          midx,
-            y:          midy,
-            mass:       config.ship_mass,
-            rotation:   90
-        });
-
-        self.sprite   = self.draw_ship();
+        self.select_ship(config.ship);
     },
     init_elements: function(config) {
         var self  = this,
             elems = self.elements = { },
-            cons  = elems.console = Badger.jquery(config.console);
+            cons  = elems.console = Badger.jquery(config.console),
+            seln  = elems.shipsel = Badger.jquery(config.shipsel);
 
         cons.find('[data-view]').each(
             function() {
@@ -197,6 +237,21 @@ var Thrust  = Badger.Base.breed({
                     view = that.data('view');
                 self.debug("found view for ", view);
                 elems[view] = that;
+            }
+        );
+        seln.append(
+            Badger.map(
+                config.ships,
+                function(value, key) {
+                    return '<option value="' + key + '"">' + value.name + '</option>';
+                }
+            )
+        );
+        seln.change(
+            function() {
+                var name = seln.val();
+                Badger.debug("selected ", name);
+                self.select_ship(name);
             }
         );
     },
@@ -252,11 +307,35 @@ var Thrust  = Badger.Base.breed({
             }
         );
     },
+    select_ship: function(name) {
+        var self = this,
+            ship = self.ship_config = self.config.ships[name];
+
+        if (! ship) {
+            throw "Invalid ship specified: " + name;
+        }
+
+        ship.turn_on    = ship.max_turn * ship.turn_rate;
+        ship.turn_off   = ship.max_turn * (1 - ship.oversteer);
+        ship.turn_max   = ship.max_turn;
+        ship.thrust_on  = ship.thrust_rate;
+        ship.thrust_off = 1 - ship.overthrust; 
+
+        self.ship = Steerable({
+            x:          self.midx,
+            y:          self.midy,
+            mass:       ship.mass,
+            power:      ship.power,
+            rotation:   90
+        });
+        self.sprite   = self.draw_ship();
+
+    },
     control_ship: function () {
         var self   = this,
             ship   = self.ship,
             press  = self.pressing,
-            config = self.config,
+            config = self.ship_config,
             ton    = config.turn_on,
             toff   = config.turn_off,
             tmax   = config.turn_max,
@@ -321,13 +400,18 @@ var Thrust  = Badger.Base.breed({
         var config = this.config,
             paper  = this.paper,
             ship   = this.ship,
+            scfg   = this.ship_config,
             pos    = ship.position,
-            sprite = paper.path(config.ship_path);
+            sprite = paper.path(scfg.path);
 
-        sprite.attr(config.ship_style);
+        sprite.attr(scfg.style);
 
         // quick hack
-        sprite.transform("s2.5T" + pos.x + "," + (self.height - pos.y));
+        sprite.transform(
+            "s" + scfg.scale.toString() + 
+            "T" + pos.x + "," + (self.height - pos.y)
+        );
+
         return sprite;
     },
     draw_orb: function() {
@@ -370,6 +454,7 @@ var Thrust  = Badger.Base.breed({
             ship    = self.ship,
             sprite  = self.sprite,
             pos     = ship.position,
+            scfg    = self.ship_config,
             width   = self.width,
             height  = self.height,
             press   = self.pressing,
@@ -384,6 +469,11 @@ var Thrust  = Badger.Base.breed({
         }
 
         function draw() {
+            var ship    = self.ship,
+                sprite  = self.sprite,
+                pos     = ship.position,
+                scfg    = self.ship_config;
+
             var now = new Date().getTime(),
                 ms  = now - (time || now),
                 dt  = ms / 1000,
@@ -405,7 +495,11 @@ var Thrust  = Badger.Base.breed({
             pos.y = pos.y % height;
             while (pos.x < 0) pos.x += width;
             while (pos.y < 0) pos.y += height;
-            sprite.transform("r" + dir.toString() + ",0,-12s2.5T" + pos.x + "," + (height - pos.y));
+            sprite.transform(
+                "r" + dir.toString() + "," + scfg.centre +
+                "s" + scfg.scale.toString() +
+                "T" + pos.x + "," + (height - pos.y)
+            );
         }
     }
 });
