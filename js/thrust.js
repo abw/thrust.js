@@ -66,8 +66,6 @@ var Steerable = Mobile.breed({
         self.velocity     = Vec2(0,0);
         self.forces       = Vec2(0,0);
         self.gravity      = Vec2(0,-9.8);
-        //this.position     = new Vec2(0,0);
-        //this.direction    = new Vec2(0,0);
         self.debug("init steerable x:%s, y:%s", self.position.x, self.position.y);
 
     },
@@ -143,6 +141,11 @@ var Thrust  = Badger.Base.breed({
         console:    '#console',
         ship_path: "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0",
         ship_mass:  5,
+        turn_on:    20,
+        turn_off:   20,
+        turn_max:   180,
+        thrust_on:  0.1,
+        thrust_off: 0.05,
         ship_style: {
             fill:           "#ccc",
             stroke:         '#444',
@@ -206,12 +209,20 @@ var Thrust  = Badger.Base.breed({
 
         parent.keydown(
             function(e) {
-                press[keys[e.keyCode] || e.keyCode] = true;
+                var key = keys[e.keyCode];
+                if (key) {
+                    press[key] = true;
+                    return Badger.cancel(e);
+                }
             }
         );
         parent.keyup(
             function(e) {
-                press[keys[e.keyCode] || e.keyCode] = false;
+                var key = keys[e.keyCode];
+                if (key) {
+                    press[key] = false;
+                    return Badger.cancel(e);
+                }
             }
         );
         cons.on(
@@ -242,28 +253,68 @@ var Thrust  = Badger.Base.breed({
         );
     },
     control_ship: function () {
-        var self  = this,
-            ship  = self.ship,
-            press = self.pressing;
+        var self   = this,
+            ship   = self.ship,
+            press  = self.pressing,
+            config = self.config,
+            ton    = config.turn_on,
+            toff   = config.turn_off,
+            tmax   = config.turn_max,
+            thron  = config.thrust_on,
+            throff = config.thrust_off;
 
         if (press.right) {
-            ship.rotation = 180;
+            if (ship.rotation < tmax) {
+                ship.rotation += ton;
+                if (ship.rotation > tmax) {
+                    ship.rotation = tmax;
+                }
+            }
         }
         else if (press.left) {
-            ship.rotation = -180;
+            if (ship.rotation > -tmax) {
+                ship.rotation -= ton;
+                if (ship.rotation < -tmax) {
+                    ship.rotation = -tmax;
+                }
+            }
         }
-        else {
-            ship.rotation = 0;
+        else if (ship.rotation > 0) {
+            ship.rotation -= toff;
+            if (ship.rotation < 0) {
+                ship.rotation = 0;
+            }
+        }
+        else if (ship.rotation < 0) {
+            ship.rotation += toff;
+            if (ship.rotation > 0) {
+                ship.rotation = 0;
+            }
         }
 
         if (press.up) {
-            ship.throttle = 1;
+            ship.throttle += thron;
+            if (ship.throttle > 1) {
+                ship.throttle = 1;
+            }
         }
         else if (press.down) {
-            ship.throttle = -1;
+            ship.throttle -= throff;
+            if (ship.throttle < -1) {
+                ship.throttle = -1;
+            }
         }
-        else {
-            ship.throttle = 0;
+        else if (ship.throttle > 0) {
+            ship.throttle -= throff;
+            if (ship.throttle < 0) {
+                ship.throttle = 0;
+            }
+        }
+        else if (ship.throttle < 0) {
+            ship.throttle += throff;
+            if (ship.throttle > 0) {
+                ship.throttle = 0;
+            }
         }
     },
     draw_ship: function() {
