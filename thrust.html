@@ -11,21 +11,29 @@
       body { 
           background-color: white 
       }
+      #left {
+          width: 75%;
+          float: left;
+          padding: 10px 0 10px 10px;
+          box-sizing: border-box;
+      }
+      #right {
+          width:  24%;
+          float: right;
+          padding: 10px;
+          box-sizing: border-box;
+      }
       #thrust {
-          margin: 0;
-          width:  800px;
-          height: 500px;
-          margin: 10px auto;
+          height: 800px;
           border: 1px solid black;
       }
       #console {
-          width:  800px;
-          margin: 0px auto;
           font-family: 'Inconsolata', sans-serif;
           font-size: 15px;
           color: #383;
       }
       #console table {
+        width: 100%;
       }
       #console table th,td {
         padding: 2px 5px;
@@ -46,10 +54,10 @@
         text-align: right;
       }
       table.inputs {
-          float: left;
+          //float: left;
       }
       table.outputs {
-          float: right;
+          //float: right;
       }
       div.blurb {
           width: 45%;
@@ -59,69 +67,76 @@
     </style>
   </head>
   <body>
-    <div id="thrust"></div>
-    <div id="console">
-      <table class="inputs">
-        <tr><th class="section" colspan="3">Controls</th></tr>
-        <tr>
-          <th>Throttle</th>
-          <td data-view="up"></td>
-          <td data-view="down"></td>
-        </tr>
-        <tr>
-          <th>Steering</th>
-          <td data-view="left"></td>
-          <td data-view="right"></td>
-        </tr>
-      </table>
-      <table class="outputs">
-        <tr><th class="section" colspan="3">Propulsion</th></tr>
-        <tr>
-          <th>Mass</th>
-          <td data-view="mass">-</td>
-          <td>
-            <button data-less="mass">Less</button>
-            <button data-more="mass">More</button>
-          </td>
-        </tr>
-        <tr>
-          <th>Power</th>
-          <td data-view="power">-</td>
-          <td>
-            <button data-less="power">Less</button>
-            <button data-more="power">More</button>
-          </td>
-        </tr>
-        <tr>
-          <th>Throttle</th>
-          <td data-view="throttle">-</td>
-          <td></td>
-        </tr>
-        <tr>
-          <th>Thrust</th>
-          <td data-view="thrust">-</td>
-          <td></td>
-        </tr>
-
-        <tr><th class="section" colspan="3">Navigation</th></tr>
-        <tr><th>Angle       </th><td data-view="angle">-</td><td></td></tr>
-        <tr><th>Rotation    </th><td data-view="rotation">-</td><td></td></tr>
-        <tr><th>Force       </th><td data-view="forcex">-</td><td data-view="forcey">-</td></tr>
-        <tr><th>Acceleration</th><td data-view="accelx">-</td><td data-view="accely">-</td></tr>
-        <tr><th>Velocity    </th><td data-view="velx">-</td><td data-view="vely">-</td></tr>
-        <tr><th>Position    </th><td data-view="posx">-</td><td data-view="posy">-</td></tr>
-      </table>
-      <div class="blurb">
-        <select name="ship">
-        </select>
-        <p>
-          This is an experimental playground for messing around with modelling
-          velocity, acceleration, mass, etc., in the style of the old-school
-          microcomputer game "Thrust".
-        </p>
-        <p>
-          Written by Andy Wardley, September 2013.
-        </p>
+    <div id="left">
+      <div id="thrust"></div>
+    </div>
+    <div id="right">
+      <div id="console">
+        <table class="outputs">
+          <tr><th class="section" colspan="3">Propulsion</th></tr>
+          <tr>
+            <th>Ship</th>
+            <td colspan="2">
+              <select name="ship"></select>
+            </td>
+          </tr>
+          <tr>        
+            <th>Mass</th>
+            <td data-view="mass">-</td>
+            <td>
+              <button data-less="mass">Less</button>
+              <button data-more="mass">More</button>
+            </td>
+          </tr>
+          <tr>
+            <th>Power</th>
+            <td data-view="power">-</td>
+            <td>
+              <button data-less="power">Less</button>
+              <button data-more="power">More</button>
+            </td>
+          </tr>
+          <tr>
+            <th>Throttle</th>
+            <td data-view="throttle">-</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th>Thrust</th>
+            <td data-view="thrust">-</td>
+            <td></td>
+          </tr>
+         <tr><th class="section" colspan="3">Navigation</th></tr>
+          <tr><th>Angle       </th><td data-view="angle">-</td><td></td></tr>
+          <tr><th>Rotation    </th><td data-view="rotation">-</td><td></td></tr>
+          <tr><th>Force       </th><td data-view="forcex">-</td><td data-view="forcey">-</td></tr>
+          <tr><th>Acceleration</th><td data-view="accelx">-</td><td data-view="accely">-</td></tr>
+          <tr><th>Velocity    </th><td data-view="velx">-</td><td data-view="vely">-</td></tr>
+          <tr><th>Position    </th><td data-view="posx">-</td><td data-view="posy">-</td></tr>
+        </table>
+        <table class="inputs">
+          <tr><th class="section" colspan="3">Controls</th></tr>
+          <tr>
+            <th>Throttle</th>
+            <td data-view="up"></td>
+            <td data-view="down"></td>
+          </tr>
+          <tr>
+            <th>Steering</th>
+            <td data-view="left"></td>
+            <td data-view="right"></td>
+          </tr>
+        </table>
+        <div class="blurb">
+          <p>
+            This is an experimental playground for messing around with modelling
+            velocity, acceleration, mass, etc., in the style of the old-school
+            microcomputer game "Thrust".
+          </p>
+          <p>
+            Written by Andy Wardley, September 2013.
+          </p>
+        </div>
       </div>
     </div>
     <script>
