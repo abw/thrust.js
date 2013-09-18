@@ -60,8 +60,6 @@
           //float: right;
       }
       div.blurb {
-          width: 45%;
-          float: left;
           font-size: 12px;
       }
     </style>
@@ -106,7 +104,22 @@
             <td data-view="thrust">-</td>
             <td></td>
           </tr>
-         <tr><th class="section" colspan="3">Navigation</th></tr>
+          <tr><th class="section" colspan="3">Payload</th></tr>
+          <tr>
+            <th>Orb</th>
+            <td colspan="2">
+              <input type="checkbox" name="orb">
+            </td>
+          </tr>
+          <tr>        
+            <th>Mass</th>
+            <td data-view="orb_mass">-</td>
+            <td>
+              <button data-less="orb_mass">Less</button>
+              <button data-more="orb_mass">More</button>
+            </td>
+          </tr>
+          <tr><th class="section" colspan="3">Navigation</th></tr>
           <tr><th>Angle       </th><td data-view="angle">-</td><td></td></tr>
           <tr><th>Rotation    </th><td data-view="rotation">-</td><td></td></tr>
           <tr><th>Force       </th><td data-view="forcex">-</td><td data-view="forcey">-</td></tr>
@@ -129,10 +142,18 @@
         </table>
         <div class="blurb">
           <p>
-            This is an experimental playground for messing around with modelling
-            velocity, acceleration, mass, etc., in the style of the old-school
-            microcomputer game "Thrust".
+            This is a playground for messing around with Newtonian mechanics,
+            inspired by the old-school microcomputer game "Thrust".  Different
+            ships have different masses, power ratings, acceleration and turning
+            capabilities.  Select a ship from the pull-down menu or use 
+            <code>Page Up</code> and <code>Page Down</code> to step through
+            them.  Accelerate using the <code>Up</code> and <code>Down</code>
+            keys, steer using <code>Left</code> and <code>Right</code>.
           </p>
+          <p>
+            You can also add an orb as a payload with a variable mass.  The
+            movement of the ship (and orb) is modelled using Verlet Integration
+            (Google it for further information).
           <p>
             Written by Andy Wardley, September 2013.
           </p>

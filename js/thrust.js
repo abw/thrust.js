@@ -19,7 +19,6 @@ function Vec2(x, y) {
     return new _vec2(x, y);
 }
 
-
 var Mobile = Badger.Base.breed({
     defaults: {
         debug:  true,
@@ -159,12 +158,13 @@ var Thrust  = Badger.Base.breed({
         trace:      0,
         console:    '#console',
         shipsel:    'select[name=ship]',
+        orbcheck:   'input[name=orb]',
         ship:       'lightning',
         ships: {
             lightning: {
                 name:               "Lightning",
                 path:               "M1.5,0L3-2L3-6L7-10L7-8L9-6L11-6L13-8L13-16L11-20L9-20L7-16L7-14L3-10L-3-10L-7-14L-7-16L-9-20L-11-20L-13-16L-13-8L-11-6L-9-6L-7-8L-7-10L-3-6L-3-1.5L-1.5,0L-1.5,8L-4,10L-4,17L-1,20L1,20L4,17L4,10L1.5,8L1.5,0Z",
-                centre:             "0,-10",
+                centre:             "0,-8",
                 scale:              "2",
                 mass:               2,
                 power:              2500,
@@ -181,7 +181,6 @@ var Thrust  = Badger.Base.breed({
             },
             tanker: {
                 name:               "Tanker",
-//                path:               "M16.001,6l0-4l1-1h3l1,1l0,4l2-3V1l1-1h2l1,1l0,2c0,0,2,0,2,0v2 c0,0-2,1-2,1l0,4l-1,1h-2l-1-1V8l-2,4v2l-1,3h-3l-1-3v-1h-2v1l-1,3h-3l-1-3v-2l-2-4v2l-1,1L4,11l-1-1c0,0,0.001-4,0.001-4 c0,0-2-1-2-1V3h2c0,0,0-2,0-2l1-1h2l1,1v2l2,3l0-4l1-1h3l1,1l0,4h1H16.001z M17,30l1-2l2-4l-1-3l-2-1l0.001-3c0,0-1-3-1-3v-1h-2l0,1 c0,0-1,3-1.001,3L13,20l-2,1l-1,3l2,4l1.062,2H17z",
                 path:               "M1.001,6l0-4l1-1h3l1,1l0,4l2-3V1l1-1h2l1,1l0,2c0,0,2,0,2,0v2l-2,1 l0,4l-1,1h-2l-1-1V8l-2,4v2l-1,3h-3l-1-3v-1h-2v1l-1,3h-3l-1-3v-2l-2-4v2l-1,1H-11l-1-1c0,0,0.001-4,0.001-4l-2-1V3h2c0,0,0-2,0-2 l1-1h2l1,1v2l2,3l0-4l1-1h3l1,1l0,4h1H1.001z M2,30l1-2l2-4l-1-3l-2-1l0.001-3c0,0-1-3-1-3v-1h-2l0,1c0,0-1,3-1.001,3L-2,20l-2,1 l-1,3l2,4l1.062,2H2z",
                 centre:             "0,-15",
                 scale:              5,
@@ -212,7 +211,6 @@ var Thrust  = Badger.Base.breed({
                 thrust_rate:        0.1,
                 overthrust:         0.1,
                 style: {
-                    //fill:           "#ccc",
                     fill:           "0-#bbc-#def-#aab-#def-#bbc",
                     stroke:         '#444',
                     'stroke-width': 3
@@ -251,23 +249,50 @@ var Thrust  = Badger.Base.breed({
                 thrust_rate:        0.2,
                 overthrust:         0.1,
                 style: {
-                    //fill:           "#7676B7",
                     gradient:       "90-#f80-#fc4",
                     stroke:         '#840',
                     'stroke-width':     4,
                     'stroke-linejoin': "round",
                     'stroke-linecap':  "round"
                 }
+            },
+            zrocket: {
+                name:               'Rocket',
+                path:               "M2.142,21.682L2.142,21.682c4.477-2.242,2.825-6.479,3.547-6.479 c0.722,0,1.445,2.143,1.445,5.406s-1.794,5.381-3.67,6.5c0,0-0.584-4.15-1.205-5.246C2.222,21.797,2.183,21.738,2.142,21.682z M-2.142,21.682C-2.142,21.682-2.142,21.682-2.142,21.682c-4.477-2.242-2.824-6.479-3.547-6.479s-1.445,2.143-1.445,5.406 s1.794,5.381,3.671,6.5c0,0,0.583-4.15,1.204-5.246C-2.222,21.797-2.182,21.738-2.142,21.682z M-0.744,20.219H-1.96 c0,0,0,0.648,0.579,0.848c0.258,0.005,0.619,0.007,1.032,0.008v-0.855C-0.475,20.219-0.607,20.219-0.744,20.219z M0.35,21.074 c0.413-0.001,0.774-0.003,1.031-0.008c0.579-0.199,0.579-0.848,0.579-0.848H0.744c-0.137,0-0.269,0-0.395,0V21.074z M-0.349,19.057 c-0.358,0-0.834,0-1.263,0h-0.928c0,0,0,0.955,0.579,1.154c0.21,0.004,0.725,0.007,1.216,0.008h0.396V19.057z M0.35,19.057v1.162 h0.395c0.491-0.001,1.006-0.004,1.216-0.008c0.579-0.199,0.579-1.154,0.579-1.154H1.612C1.184,19.057,0.708,19.057,0.35,19.057z M0.35,20.219c0.126,0,0.258,0,0.395,0H0.35L0.35,20.219z M-0.349,20.219h-0.396C-0.607,20.219-0.475,20.219-0.349,20.219 L-0.349,20.219z M0.35,17.578v1.479h1.262c0.421,0,0.791-0.002,0.927-0.004c0.58-0.199,0.58-1.471,0.58-1.471L0.35,17.578z M-0.349,17.578l-2.77,0.004c0,0,0,1.271,0.579,1.471c0.137,0.002,0.506,0.004,0.928,0.004h1.263V17.578z M-0.349,19.057 L-0.349,19.057h-1.263C-1.183,19.057-0.707,19.057-0.349,19.057z M0.35,19.057c0.359,0,0.834,0,1.262,0H0.35L0.35,19.057z M2.259,21.863c-0.471-0.831-1.183-0.821-1.909-0.803v0.014v5.707c0,0.193-0.157,0.352-0.35,0.352s-0.349-0.158-0.349-0.352v-5.707 v-0.014c-0.727-0.019-1.438-0.029-1.91,0.803c-1.13,1.994-1.461,7.455-1.461,9.965c0,5.115,2.1,12.556,3.72,12.556 s3.721-7.439,3.721-12.556C3.721,29.318,3.389,23.857,2.259,21.863z M0,15c-0.192,0-0.349,0.156-0.349,0.352v2.227v1.479v1.162 v0.842v0.014v5.707c0,0.193,0.156,0.352,0.349,0.352s0.35-0.158,0.35-0.352v-5.707v-0.014v-0.842v-1.162v-1.479v-2.227 C0.35,15.156,0.192,15,0,15z M0,32.493c0.661,0,1.196,0.535,1.196,1.195S0.661,34.884,0,34.884c-0.427,0-0.801-0.224-1.012-0.561 l-1.239,0.777c0.555,0.883,1.604,1.393,2.696,1.207c1.446-0.245,2.42-1.617,2.175-3.064c-0.246-1.446-1.618-2.42-3.065-2.174 c-0.761,0.129-1.39,0.572-1.779,1.172l1.223,0.796C-0.788,32.71-0.42,32.493,0,32.493z M-2.62,34.134 c0.061,0.354,0.188,0.68,0.369,0.967l1.239-0.777c-0.116-0.184-0.185-0.401-0.185-0.635c0-0.24,0.072-0.464,0.194-0.651 l-1.223-0.796C-2.576,32.781-2.736,33.448-2.62,34.134z M-1.852,41.854h3.703c0.227-0.578,0.443-1.228,0.644-1.928h-4.99 C-2.295,40.627-2.078,41.276-1.852,41.854z",
+                centre:             "0,9",
+                scale:              5,
+                mass:               6,
+                power:              3000,
+                max_turn:           180,
+                turn_rate:          0.2,
+                oversteer:          0.1,
+                thrust_rate:        0.5,
+                overthrust:         0.1,
+                style: {
+                    gradient:       "90-#f80-#fc4",
+                    stroke:         '#840',
+                    'stroke-width':     2,
+                    'stroke-linejoin': "round",
+                    'stroke-linecap':  "round"
+                }
             }
         },
         orb: {
-            distance:           80,
+            on:                 false,
+            distance:           120,
             size:               12,
             mass:               3,
             style: {
-                fill:           "#ccf",
+                fill:           "r(0.3,0.3)#88e-#44a",
                 stroke:         '#448',
                 'stroke-width': 2
+            }
+        },
+        link: {
+            style: {
+                stroke:             '#448',
+                'stroke-width':     4,
+                'stroke-linecap':   "round"
             }
         },
         keys: {
@@ -291,19 +316,24 @@ var Thrust  = Badger.Base.breed({
 
         self.init_elements(config);
         self.init_key_handler(config);
-        //paper.rect(midx - 15, midy -15, 30, 30);
-        //paper.rect(midx - 30, midy -30, 60, 60);
-        //paper.rect(midx - 45, midy -45, 90, 90);
-        //paper.rect(midx - 60, midy -60, 120, 120);
+        paper.rect(0, 0, width, height).attr({ fill: '45-#eee-#ddf' });
+
+        // grid for debugging - it can be tricking centering paths around origin
+        //paper.rect(midx - 15, midy -15, 30, 30).attr({ stroke: '#aaa' });
+        //paper.rect(midx - 30, midy -30, 60, 60).attr({ stroke: '#bbb' });
+        //paper.rect(midx - 45, midy -45, 90, 90).attr({ stroke: '#ccc' });
+        //paper.rect(midx - 60, midy -60, 120, 120).attr({ stroke: '#ddd' });
 
         self.select_ship(config.ship);
     },
     init_elements: function(config) {
-        var self  = this,
-            elems = self.elements = { },
-            cons  = elems.console = Badger.jquery(config.console),
-            seln  = elems.shipsel = Badger.jquery(config.shipsel);
+        var self   = this,
+            elems  = self.elements  = { },
+            cons   = elems.console  = Badger.jquery(config.console),
+            seln   = elems.shipsel  = Badger.jquery(config.shipsel);
+            orbchk = elems.orbcheck = Badger.jquery(config.orbcheck);
 
+        // look for any view elements
         cons.find('[data-view]').each(
             function() {
                 var that = $(this),
@@ -312,6 +342,7 @@ var Thrust  = Badger.Base.breed({
                 elems[view] = that;
             }
         );
+        // add ships to pull-down menu
         seln.append(
             Badger.map(
                 Badger.keys(config.ships).sort(),
@@ -321,10 +352,18 @@ var Thrust  = Badger.Base.breed({
                 }
             )
         );
+        // watch for changes to pull-down menu
         seln.change(
             function() {
                 var name = seln.val();
                 self.select_ship(name);
+            }
+        );
+        // watch for orb on/off checkbox
+        orbchk.change(
+            function() {
+                self.config.orb.on = orbchk.is(':checked');
+                self.select_ship(seln.val());
             }
         );
     },
@@ -335,6 +374,7 @@ var Thrust  = Badger.Base.breed({
             parent = Badger.jquery(document),
             cons   = self.elements.console;
 
+        // keydown/keyup handlers to track the keys we're interested in
         parent.keydown(
             function(e) {
                 var key = keys[e.keyCode];
@@ -343,7 +383,7 @@ var Thrust  = Badger.Base.breed({
                     return Badger.cancel(e);
                 }
                 else {
-                    console.log("key: ", e.keyCode);
+                    // console.log("key: ", e.keyCode);
                 }
             }
         );
@@ -356,19 +396,42 @@ var Thrust  = Badger.Base.breed({
                 }
             }
         );
+        // click handlers to add/remove mass from ship and orb
         cons.on(
             'click', '[data-more=mass]',
             function(e) {
                 self.ship.mass += 1;
+                self.ship.invmass = 1 / self.ship.mass;
             }
         );
         cons.on(
             'click', '[data-less=mass]',
             function(e) {
-                if (self.ship.mass > 1)
+                if (self.ship.mass > 1) {
                     self.ship.mass -= 1;
+                    self.ship.invmass = 1 / self.ship.mass;
+                }
             }
         );
+        cons.on(
+            'click', '[data-more=orb_mass]',
+            function(e) {
+                if (self.orb) {
+                    self.orb.mass += 1;
+                    self.orb.invmass = 1 / self.orb.mass;
+                }
+            }
+        );
+        cons.on(
+            'click', '[data-less=orb_mass]',
+            function(e) {
+                if (self.orb && self.orb.mass > 1) {
+                    self.orb.mass -= 1;
+                    self.orb.invmass = 1 / self.orb.mass;
+                }
+            }
+        );
+        // click handlers for more/less power
         cons.on(
             'click', '[data-more=power]',
             function(e) {
@@ -398,6 +461,7 @@ var Thrust  = Badger.Base.breed({
         ship.thrust_on  = ship.thrust_rate;
         ship.thrust_off = 1 - ship.overthrust;
 
+        // create a ship object
         self.ship = Steerable({
             x:          self.midx,
             y:          self.midy,
@@ -406,21 +470,35 @@ var Thrust  = Badger.Base.breed({
             rotation:   0
         });
 
-        self.orb = Mobile({
-            x:          self.midx,
-            y:          self.midy - orb.distance,
-            mass:       orb.mass
-        });
+        // create the orb object if it's supposed to be on
+        if (orb.on) {
+            self.orb = Mobile({
+                x:          self.midx,
+                y:          self.midy - orb.distance,
+                mass:       orb.mass
+            });
+        }
+        else {
+            delete self.orb;
+        }
 
+        // remove any old sprits
         if (self.sprite) {
             self.sprite.remove();
         }
         if (self.orb_sprite) {
             self.orb_sprite.remove();
         }
-        self.sprite     = self.draw_ship();
-        self.orb_sprite = self.draw_orb();
+        if (self.link_sprite) {
+            self.link_sprite.remove();
+        }
 
+        // create new sprites
+        if (orb.on) {
+            self.link_sprite = self.draw_link();
+            self.orb_sprite  = self.draw_orb();
+        }
+        self.sprite = self.draw_ship();
     },
     select_previous_ship: function() {
         var self = this,
@@ -516,8 +594,7 @@ var Thrust  = Badger.Base.breed({
     },
     moderate_connection: function() {
         var self   = this,
-            config = self.config,
-            ocfg   = config.orb,
+            ocfg   = self.config.orb,
             ship   = self.ship,
             orb    = self.orb,
             spos   = ship.position,
@@ -531,6 +608,11 @@ var Thrust  = Badger.Base.breed({
             imass  = sim + oim,
             diff   = l2 / (d2 + l2) - 0.5;
 
+        // Ship pushes (or pulls) on the orb and the orb pushes (or pulls)
+        // on the ship, in inverse proportion to their mass (more massive
+        // objects move less).  We see how far apart they are, see how far
+        // apart they should be and then move both ship and orb in the 
+        // appropriate direction by the correct amount
         diff    *= 2 / imass;
         dx      *= diff;
         dy      *= diff;
@@ -548,8 +630,6 @@ var Thrust  = Badger.Base.breed({
             sprite = paper.path(scfg.path);
 
         sprite.attr(scfg.style);
-
-        // quick hack
         sprite.transform(
             "s" + scfg.scale.toString() +
             "T" + pos.x + "," + (self.height - pos.y)
@@ -567,14 +647,27 @@ var Thrust  = Badger.Base.breed({
         sprite.attr(ocfg.style);
         return sprite;
     },
+    draw_link: function() {
+        var self   = this,
+            config = self.config,
+            paper  = self.paper,
+            spos   = self.ship.position,
+            opos   = self.orb.position,
+            link   = self.link_points = [
+                ['M', spos.x, self.height - spos.y],
+                ['L', opos.x, self.height - opos.y]
+            ];
+
+        return paper.path(link).attr(config.link.style);
+    },
     display_stats: function() {
         var self  = this,
             elems = self.elements,
             ship  = self.ship,
+            orb   = self.orb,
             press = self.pressing,
             fix   = 2;
 
-        self.debug("pressing: ", press);
         elems.power.html(ship.power.toFixed(fix));
         elems.throttle.html(ship.throttle.toFixed(fix));
         elems.thrust.html(ship.thrust.toFixed(fix));
@@ -590,6 +683,7 @@ var Thrust  = Badger.Base.breed({
         elems.vely.html(ship.velocity.y.toFixed(fix));
         elems.posx.html(ship.position.x.toFixed(fix));
         elems.posy.html(ship.position.y.toFixed(fix));
+        elems.orb_mass.html(orb ? orb.mass : 'N/A');
 
         elems.up.html(press.up       ? 'UP'    : '&uarr;');
         elems.down.html(press.down   ? 'DOWN'  : '&darr;');
@@ -622,14 +716,15 @@ var Thrust  = Badger.Base.breed({
                 sprite  = self.sprite,
                 orb     = self.orb,
                 osprite = self.orb_sprite,
-                pos     = ship.position,
+                spos    = ship.position,
+                opos    = orb && orb.position,
                 scfg    = self.ship_config;
 
             var now = new Date().getTime(),
                 ms  = now - (time || now),
                 dt  = ms / 1000,
                 dir = 180 + ship.angle,
-                px, py;
+                sx, sy, ox, oy, dx, dy;
 
             if (! press.escape)
                 requestAnimationFrame(draw);
@@ -638,29 +733,48 @@ var Thrust  = Badger.Base.breed({
 
             self.debug(
                 "dt:%s x:%s y:%s angle:%s  rotation:%s  throttle:%s",
-                dt, pos.x, pos.y, ship.angle, ship.rotation, ship.throttle
+                dt, spos.x, spos.y, ship.angle, ship.rotation, ship.throttle
             );
 
             self.control_ship();
             ship.update(dt, stats);
-            orb.move(dt);
-            self.moderate_connection();
 
-            py = (height + pos.y % height) % height;
-            px = (width  + pos.x % width) % width;
+            if (orb) {
+                orb.move(dt);
+                self.moderate_connection();
+            }
+
+            // transform the ship so it wraps around the screen edges
+            sx = (width  + spos.x %  width) % width;
+            sy = (height + spos.y % height) % height;
+            //sy = height - sy;       // invert co-ordinates
             sprite.transform(
                 "r" + dir.toString() + "," + scfg.centre +
                 "s" + scfg.scale.toString() +
                 //"T" + (pos.x % width) + "," + (height - pos.y) % height)
-                "T" + px + "," + (height - py)
+                "T" + sx + "," + (height - sy)
             );
 
-            pos = orb.position;
-            py = (height + pos.y % height) % height;
-            px = (width  + pos.x % width) % width;
-            osprite.transform(
-                "T" + px + "," + (height - py)
-            );
+            if (orb) {
+                // locate the orb relative to the ship in absolute co-ordinates
+                dx = spos.x - opos.x;
+                dy = spos.y - opos.y;
+
+                // transform the orb relative to the ship's screen co-ordinates
+                ox = sx - dx;
+                oy = sy - dy;
+                sy = height - sy;
+                oy = height - oy;
+                osprite.transform(
+                    "T" + ox + "," + oy
+                );
+   
+                self.link_points[0][1] = sx;
+                self.link_points[0][2] = sy;
+                self.link_points[1][1] = ox;
+                self.link_points[1][2] = oy;
+                self.link_sprite.attr({ path: self.link_points });
+            }
         }
     }
 });
